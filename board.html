@@ -28,6 +28,9 @@ Estudiante: Juan Pablo Zapata Atehortua -->
                 var piece= document.getElementById(data);
                 //PONER TURNO
                 game.movePiece(ev.target.id,data);
+                board.showTurn(game.turn);
+                board.showMovesNumber(game.moves.length);
+                
             };
 
             boardContainer.ondragover = function () {
@@ -220,6 +223,11 @@ Estudiante: Juan Pablo Zapata Atehortua -->
             <u><span id="alias-placeholder"></span></u> VS
             <u><span id="alias2-placeholder"></span></u>
         </h2>
+        <span style="text-shadow: none; font-size: 1.05rem">
+            <b>Turno: <span id="turn-label"> </span><br>
+                Número de movimientos: <span id="#move-label"> </span></b>
+        </span>
+        
     </div>
         <div style="text-align: center; max-width: auto;">
             <div class="content">

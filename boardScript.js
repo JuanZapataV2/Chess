@@ -18,6 +18,8 @@ class Board{
         this.container = container;
         this.createTable(this.container);
         this.setPiecePositions(this.pieces);
+        this.showTurn(WHITE);
+        this.showMovesNumber(0);
     }
 
     createTable(container){
@@ -28,9 +30,6 @@ class Board{
             col.innerHTML=String.fromCharCode(i);
             container.appendChild(col);
         }
-
-
-
         for (let r=8;r>0;r--){
             let tr = document.createElement('tr');
             let number = document.createElement('td');
@@ -132,6 +131,18 @@ class Board{
         }
     }
 
+    showTurn(turn){
+        let target = document.getElementById("turn-label");
+        turn === WHITE ? turn = "blanco" : turn= "negro";
+        target.innerHTML = turn;
+
+    }
+
+    showMovesNumber(number){
+        let target = document.getElementById("#move-label");
+        target.innerHTML = number;
+    }
+
     clearBoard() {
         for(let i=0;i<this.pieces.length;i++){
             if(this.pieces[i].currentLocation){
@@ -151,15 +162,15 @@ class Board{
         this.clearBoard();
         this.clearGraveyard();
         this.setPiecePositions(this.pieces);
+        this.showTurn(WHITE);
     }
 }
 
 
 class Move {
-    constructor(piece, position,type) {
+    constructor(piece, position) {
         this.piece = piece;
         this.position = position;
-        this.type = type;
     }
 }
 

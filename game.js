@@ -457,9 +457,9 @@ class Game {
             ) {
               if (!this.isEmpty(position)) {
                 return 2;
-              } else {
+              } else if(piece.currentLocation !== piece.initialLocation) {
                 var last = this.moves[this.moves.length - 1];
-                if (last.type === "r" && last.position === position) {
+                if (last.position === position) {
                   return 1;
                 } else {
                   return 0;
@@ -485,9 +485,9 @@ class Game {
             ) {
               if (!this.isEmpty(position)) {
                 return 2;
-              } else {
+              } else if(piece.currentLocation !== piece.initialLocation) {
                 var last = this.moves[this.moves.length - 1];
-                if (last.type === "r" && last.position === position) {
+                if (last.position === position) {
                   return 1;
                 } else {
                   return 0;
@@ -614,7 +614,7 @@ class Game {
       //if(this.isEmpty(position)){
       newPiece.currentLocation = position;
       if (this.onMove != undefined) {
-        this.addMoveList(piece, position, "m");
+        this.addMoveList(piece, position);
         this.onMove(piece, position);
         this.changeTurn();
       }
@@ -633,7 +633,6 @@ class Game {
 
   removePiece(piece) {
     if (this.onCapture != undefined) {
-      this.addMoveList(piece, piece.currentLocation, "r");
       this.onCapture(piece);
       piece.currentLocation = null;
       piece.status = 0;
@@ -649,8 +648,8 @@ class Game {
     }
   }
 
-  addMoveList(piece, pos, type) {
-    let newMove = new Move(piece, pos, type);
+  addMoveList(piece, pos) {
+    let newMove = new Move(piece, pos);
     this.moves.push(newMove);
   }
 }
