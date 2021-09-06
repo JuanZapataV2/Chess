@@ -16,7 +16,34 @@ class Board{
     constructor(pieces,container){
         this.pieces = pieces;
         this.container = container;
+        this.createTable(this.container);
         this.setPiecePositions(this.pieces);
+    }
+
+    createTable(container){
+        let col = document.createElement('th');
+        container.appendChild(col);
+        for (let i=65;i<73;i++){
+            let col = document.createElement('th');
+            col.innerHTML=String.fromCharCode(i);
+            container.appendChild(col);
+        }
+
+
+
+        for (let r=8;r>0;r--){
+            let tr = document.createElement('tr');
+            let number = document.createElement('td');
+            number.innerHTML=r;
+            number.classList.add("number");
+            tr.appendChild(number);
+            for(let c = 'A'.charCodeAt(0);c<='A'.charCodeAt(0)+7;c++){
+                let td = document.createElement('td');
+                td.id = String.fromCharCode(c)+r;
+                tr.appendChild(td);
+            }
+            container.appendChild(tr);
+        }
     }
 
     setPiecePositions(pieces){
