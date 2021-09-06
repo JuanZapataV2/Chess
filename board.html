@@ -131,9 +131,6 @@ Estudiante: Juan Pablo Zapata Atehortua -->
         i:hover{
             font-size: 130%;
         }
-        /* table.board td:active{
-            font-size: 240%;
-        }  */
         table.board tr td:first-child{
             color: #000; 
             background-color: transparent !important;
@@ -159,13 +156,24 @@ Estudiante: Juan Pablo Zapata Atehortua -->
             text-align: center;
             font-size: 1.1rem;
         }
+
+        .actions{
+            border-radius: 2rem;
+            padding: 0.2rem;
+            text-align: center;
+            border: #623327 solid;
+            display: inline-block;
+            background-color: #ffe1ba;
+            width: 30rem;
+        }
+    
         .graveyard{
             width: 30rem;
             height: 15rem;
             background-color: #b4764f;
             display: inline-block;
             padding: 0.2rem;  
-            margin: 1rem;
+            margin: 0.5rem;
             border: solid #623327;
             border-radius: 1rem;
             text-align: center;
@@ -215,17 +223,24 @@ Estudiante: Juan Pablo Zapata Atehortua -->
     </div>
         <div style="text-align: center; max-width: auto;">
             <div class="content">
+    
                 <table class="board"></table>
 
                 <div class="movements">
                     <h2><u>Movimientos</u></h2>
                     <span id="movements"></span>
                 </div>
+
                 <br>
-                <div style="text-align: center;">
-                    <button type="button" onclick="game.reset()">Reiniciar</button>
+                <div class="actions">
+                    <div class="input" >
+                        <label for="movement" > Digitar movimiento </label> <br>
+                        <input type="text" id="movement" name="movement" required minlength="2" maxlength="4"><br>
+                        <button type="submit" class="button" id="btn-enviar" onclick="inputMove()"> Mover </button> 
+                    </div><hr style="border-top:2px solid #623327;">
+                    <button type="button" onclick="game.reset()">Reiniciar juego</button>
                 </div>
-                
+                <br>
                 <div class="graveyard">
                     <h2><u>Cementerio</u></h2>
                     <span id="graveyard"></span>
