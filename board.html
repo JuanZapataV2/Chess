@@ -1,0 +1,373 @@
+<!-- Tablero de ajedrez - programación Front End
+Estudiante: Juan Pablo Zapata Atehortua -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablero</title>
+    <script src="https://kit.fontawesome.com/79adcecec1.js" crossorigin="anonymous"></script>
+    <script src="boardScript.js"></script>
+    <script src="server.js"></script>
+    <script src="game.js"></script>
+    <script src="players.js"></script>
+    <script>
+        var server = new Server();
+        function initialize(){
+            getAlias();
+            generateName();
+            player1 = new Player(document.getElementById("alias-placeholder").innerHTML,WHITE);
+            player2 = new Player(document.getElementById("alias2-placeholder").innerHTML,BLACK);
+            game = new Game();
+            var boardContainer = document.getElementsByClassName("board")[0];
+            board = new Board(game.pieces,boardContainer);
+
+            boardContainer.ondrop= (ev) => {
+                var data = ev.dataTransfer.getData("piece");
+                var piece= document.getElementById(data);
+                //PONER TURNO
+                game.movePiece(ev.target.id,data);
+            };
+
+            boardContainer.ondragover = function () {
+                dragoverFn(event);
+            };
+
+
+            game.onMove = (piece,pos) => {
+                board.movePiece(piece,pos);
+            }
+
+            game.onReset = () => {
+                board.reset();
+            }
+
+            game.onCapture = (piece) => {
+                board.removePiece(piece.id);
+            };
+            board.onPieceDragged = (piece, pos) => {
+                return game.movePiece(piece,pos);
+                server.move(piece,pos);
+            };
+
+            server.onmove = (piece,pos) => {
+                game.movePiece(piece,pos);
+            };
+        }
+        function joinGame(){
+            server.join(username).then(
+                (color)=>{
+                    console.log("Color: " +color);
+                    //board.sertPlayerColor
+                    //playerColor = color
+                },
+                (error)=>{
+                    //mostrar error al usuario
+                    console.log(error);
+                }
+            );            
+        }
+
+        function drag(ev){
+            ev.dataTransfer.setData("piece", ev.target.id);
+        }
+
+        function dragoverFn(ev){
+            ev.preventDefault();
+        }
+
+    </script>
+    <style>
+        body{
+            background-image: "/background";
+            background-color: #fae5c6;
+            font-family: "Century Gothic";
+            text-align: center; 
+        }
+        button{
+            background-color: #623327 ;
+            border: none;
+            color: #fae5c6;
+            padding: 1rem 2rem;
+            text-align: center;
+            font-size: 1.5rem;
+            transition-duration: 0.4s;
+        }
+        button:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+        .header{
+            border-radius: 2rem;
+            padding: 2rem;
+            text-shadow: #623327 0.1rem 0.1rem 0.1rem;
+            font-style: italic;
+            text-align: center;
+            border: #623327 solid;
+            display: inline-block;
+            background-color: #ffedba;
+        } 
+        table.board td:nth-last-child(-n+8){
+            width: 3rem;
+            height: 3rem;
+            text-align: center;
+            font-size: 2rem;
+        }
+        table.board tr:nth-child(even) td:nth-child(even), tr:nth-child(odd) td:nth-child(odd){ 
+            background: #b4764f
+        }
+        table.board tr:nth-child(even) td:nth-child(odd), tr:nth-child(odd) td:nth-child(even){ 
+            background-color: #623327 
+        }
+        .white{ 
+            color: #ffedba;
+        }
+        .movements .white{
+            color: black;
+        }
+        table.board td:hover{
+            opacity: 75%;
+        }
+        i:hover{
+            font-size: 130%;
+        }
+        /* table.board td:active{
+            font-size: 240%;
+        }  */
+        table.board tr td:first-child{
+            color: #000; 
+            background-color: transparent !important;
+        }
+        table.board{
+            width: 28rem;
+            height: 28rem;
+            border-collapse: collapse;
+            text-align: center;
+            display: inline-block;
+        }
+        .movements{
+            width: 20rem;
+            height: 25rem;
+            background-color: #ffe1ba;
+            display: inline-block;
+            padding: 1rem;  
+            margin: 1rem;
+            border: solid #623327;
+            border-radius: 1rem;
+            overflow: scroll;
+            overflow-x: hidden;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        .graveyard{
+            width: 30rem;
+            height: 15rem;
+            background-color: #b4764f;
+            display: inline-block;
+            padding: 0.2rem;  
+            margin: 1rem;
+            border: solid #623327;
+            border-radius: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        .content{
+            text-align: center;
+            left: 50%;
+            right: 50%;
+        }
+        .movements::-webkit-scrollbar {
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+        .movements::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px #b4764f; 
+            border-radius: 1rem;
+            
+        }
+        .movements::-webkit-scrollbar-thumb {
+            background:#623327;
+            border-radius: 1rem;
+        }
+        .movements::-webkit-scrollbar-thumb:hover {
+            background:#b4764f; 
+        }
+        .info-message{
+            color: rgb(182, 182, 0);
+            font-style: italic;
+            text-decoration: underline;
+        }
+        .error-message{
+            color: red;
+            font-style: italic;
+            font-weight: bold;
+        }
+        
+    </style>
+</head>
+<body onload="initialize()">
+    <div class="header">
+        <h1 >Partida de ajedrez iniciada</h1>
+        <h2 class="names">
+            <u><span id="alias-placeholder"></span></u> VS
+            <u><span id="alias2-placeholder"></span></u>
+        </h2>
+    </div>
+        <div style="text-align: center; max-width: auto;">
+            <div class="content">
+                <table class="board">
+                    <th></th>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                    <th>D</th>
+                    <th>E</th>
+                    <th>F</th>
+                    <th>G</th>
+                    <th>H</th>
+                    <tr>
+                        <td class="number">8</td>
+                        <td id="A8">
+                            
+                        </td> 
+                        <td id="B8">
+                            
+                        </td>
+                        <td id="C8">
+                            
+                        </td>
+                        <td id="D8">
+                        </td>
+                        <td id="E8">
+                        </td>
+                        <td id="F8">
+                        </td>
+                        <td id="G8">
+                        </td>
+                        <td id="H8"></td>
+                    </tr>
+                    <tr>
+                        <td class="number">7</td>
+                        <td id="A7">
+                        </td>
+                        <td id="B7">
+                        </td>
+                        <td id="C7">
+                        </td>
+                        <td id="D7">
+                        </td>
+                        <td id="E7">
+                        </td>
+                        <td id="F7">
+                        </td>
+                        <td id="G7">
+                        </td>
+                        <td id="H7">
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="number">6</td>
+                        <td id="A6"> </td>
+                        <td id="B6"> </td>
+                        <td id="C6"> </td>
+                        <td id="D6"> </td>
+                        <td id="E6"> </td>
+                        <td id="F6"> </td>
+                        <td id="G6"> </td>
+                        <td id="H6"> </td>
+                    </tr>
+                    <tr>
+                        <td class="number">5</td>
+                        <td id="A5"> </td>
+                        <td id="B5"> </td>
+                        <td id="C5"> </td>
+                        <td id="D5"> </td>
+                        <td id="E5"> </td>
+                        <td id="F5"> </td>
+                        <td id="G5"> </td>
+                        <td id="H5"> </td>
+                    </tr>
+                    <tr>
+                        <td class="number">4</td>
+                        <td id="A4"> </td>
+                        <td id="B4"> </td>
+                        <td id="C4"> </td>
+                        <td id="D4"> </td>
+                        <td id="E4"> </td>
+                        <td id="F4"> </td>
+                        <td id="G4"> </td>
+                        <td id="H4"> </td>
+                    </tr>
+                    <tr>
+                        <td class="number">3</td>
+                        <td id="A3"> </td>
+                        <td id="B3"> </td>
+                        <td id="C3"> </td>
+                        <td id="D3"> </td>
+                        <td id="E3"> </td>
+                        <td id="F3"> </td>
+                        <td id="G3"> </td>
+                        <td id="H3"> </td>
+                    </tr>
+                    <tr>
+                        <td class="number">2</td>
+                        <td id="A2">
+                        </td>
+                        <td id="B2">
+                        </td>
+                        <td id="C2">
+                        </td>
+                        <td id="D2">
+                        </td>
+                        <td id="E2">
+                        </td>
+                        <td id="F2">
+                        </td>
+                        <td id="G2">
+                        </td>
+                        <td id="H2">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="number">1</td>
+                        <td id="A1">
+                        </td> 
+                        <td id="B1"> 
+                        </td>
+                        <td id="C1">
+                        </td>
+                        <td id="D1">
+                        </td>
+                        <td id="E1">
+                        </td>
+                        <td id="F1">
+                        </td>
+                        <td id="G1">
+                        </td>
+                        <td id="H1">
+                        </td> 
+                    </tr>
+                </table>
+
+                <div class="movements">
+                    <h2><u>Movimientos</u></h2>
+                    <span id="movements"></span>
+                </div>
+                <br>
+                <div style="text-align: center;">
+                    <button type="button" onclick="game.reset()">Reiniciar</button>
+                </div>
+                
+                <div class="graveyard">
+                    <h2><u>Cementerio</u></h2>
+                    <span id="graveyard"></span>
+                </div>
+        </div>
+    
+    </div>
+    
+
+    
+</body>
+</html>

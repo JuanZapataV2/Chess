@@ -1,0 +1,72 @@
+<!-- Tablero de Ajedrez - Programación Front End
+Estudiante: Juan Pablo Zapata Atehortua -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularios</title>
+    <script
+      src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+      data-auto-a11y="true"
+    ></script>
+    <script src="boardScript.js"></script>
+    <style>
+        body{
+            background-color: #fae5c6;
+            font-family: "Century Gothic";
+            background-image: url("background.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 0px -200px;     
+        }
+        .first-form{
+            text-align: center;
+            border-radius: 2rem;
+            padding: 2rem;
+            text-shadow: #623327 0.1rem 0.1rem 0.1rem;
+            font-style: italic;
+            display: inline-block;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            border: #623327 solid;
+            border-radius: 1rem;
+            background-color: #ffedba;
+        }    
+        button{
+            background-color: #623327 ;
+            border: none;
+            color: #fae5c6;
+            padding: 1rem 2rem;
+            text-align: center;
+            font-size: 1.5rem;
+            margin: 1rem 0.5px;
+            transition-duration: 0.4s;
+        }
+        .button:hover {
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+        input:invalid {
+            border: 2px dashed red;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="first-form">
+        <h1 style="display: inline;">Partida de ajedrez</h1>
+        <i class="fas fa-chess-board"></i>
+        <form action="board.html" method="GET">
+            <label for="alias" > Ingrese su alias </label> <br>
+            <input type="text" id="alias" name="alias" max="256" required minlength="2" maxlength="20"><br>
+            <button type="submit" class="button" id="btn-enviar"> Entrar </button> 
+        </form>    
+
+    </div>
+</body>
+</html>
